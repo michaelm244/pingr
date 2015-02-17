@@ -38,16 +38,18 @@
   };
 
   initElement = function() {
-    var i, tempDiv, _i, _results;
+    var i, max_height, tempDiv, _i, _results;
     elem.style.display;
+    max_height = NUM_BARS * 20;
     _results = [];
     for (i = _i = 1; _i <= NUM_BARS; i = _i += 1) {
       tempDiv = document.createElement("div");
-      tempDiv.style['background-color'] = 'green';
-      tempDiv.style.width = '20px';
+      tempDiv.style['background-color'] = "green";
+      tempDiv.style.width = "20px";
       tempDiv.style.height = (i * 20) + "px";
       tempDiv.style.display = "inline-block";
       tempDiv.style.margin = "5px";
+      tempDiv.style['margin-top'] = (max_height - (i * 20)) + "px";
       _results.push(bars[i - 1] = elem.insertBefore(tempDiv, null));
     }
     return _results;

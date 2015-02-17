@@ -19,13 +19,15 @@ changeNumBars = (numBars) ->
 
 initElement = ->
   elem.style.display
+  max_height = NUM_BARS*20
   for i in [1..NUM_BARS] by 1
     tempDiv = document.createElement("div")
-    tempDiv.style['background-color'] = 'green'
-    tempDiv.style.width = '20px'
+    tempDiv.style['background-color'] = "green"
+    tempDiv.style.width = "20px"
     tempDiv.style.height = (i*20)+"px"
     tempDiv.style.display = "inline-block"
-    tempDiv.style.margin = "5px";
+    tempDiv.style.margin = "5px"
+    tempDiv.style['margin-top'] = (max_height-(i*20))+"px"
     bars[i-1] = elem.insertBefore tempDiv, null
 
 updatePing = (pingTime) ->
@@ -68,10 +70,10 @@ init = ->
   pingCallback = (pingTime) ->
     updatePing pingTime
     if pingTime == -1
-      # internet is down, lets check every 100 ms
-      setTimeout pingServer(pingCallback), 100
+      # internet is down, lets check every 500 ms
+      setTimeout pingServer(pingCallback), 500
     else
-      pingServer pingCallback
+      setTimeout pingServer(pingCallback), 100
   pingServer pingCallback
 
 
