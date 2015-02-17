@@ -4,13 +4,15 @@ NUM_BARS = 4
 elem = document.getElementById("pingr")
 
 hideBars = () ->
-  for i in [1, numBars] by 1
+  for i in [1, NUM_BARS] by 1
     bars[i-1].style.display = "none"
 
 changeNumBars = (numBars) ->
-  return if numBars < 0 || numBars > 4
+  return if numBars < 0 || numBars > NUM_BARS
 
-  hideBars
+  console.log "changing numBars to: "+numBars
+
+  hideBars()
 
   for i in [1, numBars] by 1
     bars[i-1].style.display = "inline-block"
@@ -27,21 +29,26 @@ initElement = ->
     bars[i-1] = elem.insertBefore tempDiv, null
 
 updatePing = (pingTime) ->
+
+  console.log "ping time is: "+pingTime
+
   if pingTime == -1
     # internet is down
   else
-    switch pingTime
-      when pingTime > 0 && pingTime <= 150 then changeNumBars 4
-      when pingTime > 150 && pingTime <= 300 then changeNumBars 3
-      when pingTime > 300 && pingTime <= 500 then changeNumBars 2
-      else changeNumBars 1
-
-
+    if pingTime > 0 && pingTime <= 150
+      changeNumBars 4
+    else if pingTime > 150 && pingTime <= 300
+      changeNumBars 3
+    else if pingTime > 300 && pingTime <= 500
+      changeNumBars 2
+    else
+      changeNumBars 1
 
 
 pingServer = (callback) ->
-  http = XMLHttpRequest()
-  http.open "GET", rootDomain
+  http = new XMLHttpRequest()
+  url = rootDomain+"?cachebreaker="+Date.now()
+  http.open "GET", url
   http.onreadystatechange = () ->
     if http.readyState == 4
       if http.status != 0
@@ -62,6 +69,7 @@ init = ->
     updatePing pingTime
     if pingTime == -1
       # internet is down, lets check every 100 ms
+      setTimeout pingServer(pingCallback), 100
     else
       pingServer pingCallback
   pingServer pingCallback

@@ -12,7 +12,7 @@
 
   hideBars = function() {
     var i, _i, _len, _ref, _results;
-    _ref = [1, numBars];
+    _ref = [1, NUM_BARS];
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i += 1) {
       i = _ref[_i];
@@ -23,10 +23,11 @@
 
   changeNumBars = function(numBars) {
     var i, _i, _len, _ref, _results;
-    if (numBars < 0 || numBars > 4) {
+    if (numBars < 0 || numBars > NUM_BARS) {
       return;
     }
-    hideBars;
+    console.log("changing numBars to: " + numBars);
+    hideBars();
     _ref = [1, numBars];
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i += 1) {
@@ -53,26 +54,27 @@
   };
 
   updatePing = function(pingTime) {
+    console.log("ping time is: " + pingTime);
     if (pingTime === -1) {
 
     } else {
-      switch (pingTime) {
-        case pingTime > 0 && pingTime <= 150:
-          return changeNumBars(4);
-        case pingTime > 150 && pingTime <= 300:
-          return changeNumBars(3);
-        case pingTime > 300 && pingTime <= 500:
-          return changeNumBars(2);
-        default:
-          return changeNumBars(1);
+      if (pingTime > 0 && pingTime <= 150) {
+        return changeNumBars(4);
+      } else if (pingTime > 150 && pingTime <= 300) {
+        return changeNumBars(3);
+      } else if (pingTime > 300 && pingTime <= 500) {
+        return changeNumBars(2);
+      } else {
+        return changeNumBars(1);
       }
     }
   };
 
   pingServer = function(callback) {
-    var http, started;
-    http = XMLHttpRequest();
-    http.open("GET", rootDomain);
+    var http, started, url;
+    http = new XMLHttpRequest();
+    url = rootDomain + "?cachebreaker=" + Date.now();
+    http.open("GET", url);
     http.onreadystatechange = function() {
       var ended, pingTime;
       if (http.readyState === 4) {
@@ -95,7 +97,7 @@
     pingCallback = function(pingTime) {
       updatePing(pingTime);
       if (pingTime === -1) {
-
+        return setTimeout(pingServer(pingCallback), 100);
       } else {
         return pingServer(pingCallback);
       }
