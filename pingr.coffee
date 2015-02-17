@@ -3,8 +3,17 @@ bars = []
 NUM_BARS = 4
 elem = document.getElementById("pingr")
 
-changeNumBars = (numBars) ->
+hideBars = () ->
+  for i in [1, numBars] by 1
+    bars[i-1].style.display = "none"
 
+changeNumBars = (numBars) ->
+  return if numBars < 0 || numBars > 4
+
+  hideBars
+
+  for i in [1, numBars] by 1
+    bars[i-1].style.display = "inline-block"
 
 initElement = ->
   elem.style.display
@@ -31,7 +40,6 @@ updatePing = (pingTime) ->
 
 
 pingServer = (callback) ->
-  started = Date.now()
   http = XMLHttpRequest()
   http.open "GET", rootDomain
   http.onreadystatechange = () ->
@@ -40,13 +48,24 @@ pingServer = (callback) ->
         # internet is not down
         ended = Date.now()
         pingTime = ended - started
+        callback(pingTime)
       else
         # internet is down
-      callback()
+        callback(-1)
 
+  started = Date.now()
+  http.send null
 
 init = ->
-  initElement();
+  initElement()
+  pingCallback = (pingTime) ->
+    updatePing pingTime
+    if pingTime == -1
+      # internet is down, lets check every 100 ms
+    else
+      pingServer pingCallback
+  pingServer pingCallback
+
 
 setTimeout init, 0
 
