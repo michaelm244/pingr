@@ -23,11 +23,11 @@
 
   changeNumBars = function(numBars) {
     var i, _i, _len, _ref, _results;
-    if (numBars < 0 || numBars > NUM_BARS) {
+    hideBars();
+    if (numBars <= 0 || numBars > NUM_BARS) {
       return;
     }
     console.log("changing numBars to: " + numBars);
-    hideBars();
     _ref = [1, numBars];
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i += 1) {
@@ -38,8 +38,11 @@
   };
 
   initElement = function() {
-    var i, max_height, tempDiv, _i, _results;
-    elem.style.display;
+    var i, max_height, pTag, tempDiv, textNode, _i, _results;
+    textNode = document.createTextNode("Network Strength:");
+    pTag = document.createElement("p");
+    pTag.appendChild(textNode);
+    elem.appendChild(pTag);
     max_height = NUM_BARS * 20;
     _results = [];
     for (i = _i = 1; _i <= NUM_BARS; i = _i += 1) {
@@ -49,8 +52,9 @@
       tempDiv.style.height = (i * 20) + "px";
       tempDiv.style.display = "inline-block";
       tempDiv.style.margin = "5px";
+      tempDiv.style['border-radius'] = "4px";
       tempDiv.style['margin-top'] = (max_height - (i * 20)) + "px";
-      _results.push(bars[i - 1] = elem.insertBefore(tempDiv, null));
+      _results.push(bars[i - 1] = elem.appendChild(tempDiv));
     }
     return _results;
   };
@@ -58,7 +62,7 @@
   updatePing = function(pingTime) {
     console.log("ping time is: " + pingTime);
     if (pingTime === -1) {
-
+      return changeNumBars(0);
     } else {
       if (pingTime > 0 && pingTime <= 150) {
         return changeNumBars(4);
@@ -99,9 +103,9 @@
     pingCallback = function(pingTime) {
       updatePing(pingTime);
       if (pingTime === -1) {
-        return setTimeout(pingServer(pingCallback), 100);
+        return setTimeout(pingServer(pingCallback), 1000);
       } else {
-        return pingServer(pingCallback);
+        return setTimeout(pingServer(pingCallback), 500);
       }
     };
     return pingServer(pingCallback);

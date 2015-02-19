@@ -8,18 +8,24 @@ hideBars = () ->
     bars[i-1].style.display = "none"
 
 changeNumBars = (numBars) ->
-  return if numBars < 0 || numBars > NUM_BARS
+  hideBars()
+
+  return if numBars <= 0 || numBars > NUM_BARS
 
   console.log "changing numBars to: "+numBars
-
-  hideBars()
 
   for i in [1, numBars] by 1
     bars[i-1].style.display = "inline-block"
 
 initElement = ->
-  elem.style.display
+  textNode = document.createTextNode "Network Strength:"
+  pTag = document.createElement "p"
+  pTag.appendChild textNode
+
+  elem.appendChild pTag
+
   max_height = NUM_BARS*20
+
   for i in [1..NUM_BARS] by 1
     tempDiv = document.createElement("div")
     tempDiv.style['background-color'] = "green"
@@ -27,8 +33,9 @@ initElement = ->
     tempDiv.style.height = (i*20)+"px"
     tempDiv.style.display = "inline-block"
     tempDiv.style.margin = "5px"
+    tempDiv.style['border-radius'] = "4px"
     tempDiv.style['margin-top'] = (max_height-(i*20))+"px"
-    bars[i-1] = elem.insertBefore tempDiv, null
+    bars[i-1] = elem.appendChild tempDiv
 
 updatePing = (pingTime) ->
 
@@ -36,6 +43,7 @@ updatePing = (pingTime) ->
 
   if pingTime == -1
     # internet is down
+    changeNumBars 0
   else
     if pingTime > 0 && pingTime <= 150
       changeNumBars 4
@@ -70,10 +78,10 @@ init = ->
   pingCallback = (pingTime) ->
     updatePing pingTime
     if pingTime == -1
-      # internet is down, lets check every 500 ms
-      setTimeout pingServer(pingCallback), 500
+      # internet is down, lets check every 1000 ms
+      setTimeout pingServer(pingCallback), 1000
     else
-      setTimeout pingServer(pingCallback), 100
+      setTimeout pingServer(pingCallback), 500
   pingServer pingCallback
 
 
