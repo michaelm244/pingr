@@ -5,6 +5,10 @@ elem = document.getElementById("pingr")
 num_requests = 0
 currNumBars = 4
 
+clearChildren = () ->
+  while (elem.firstChild)
+    elem.removeChild(elem.firstChild)
+
 hideBars = () ->
   for i in [1..NUM_BARS] by 1
     bars[i-1].style.display = "none"
@@ -29,14 +33,20 @@ changeNumBars = (numBars) ->
   currNumBars = numBars
 
 initElement = (width, height) ->
+  clearChildren()
+
   elem.style['border-radius'] = "5px"
   elem.style.border = "1px solid #9E9E9E"
   elem.style.width = width+"px"
   elem.style.height = height+"px"
 
   margin = 2
-  barWidth = (width - ((NUM_BARS+2)*(margin)) / 4
-  barHeightIncrement = (height - ((NUM_BARS+2)*margin)) / 4
+
+  if width < 50
+    margin = 1
+
+  barWidth = (width - ((NUM_BARS*2)*margin)) / 4
+  barHeightIncrement = (height - ((NUM_BARS*2)*margin)) / 4
 
   for i in [1..NUM_BARS] by 1
     tempDiv = document.createElement("div")
