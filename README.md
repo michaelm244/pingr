@@ -1,7 +1,16 @@
 
 # pingr
 ---
-To use Pingr:
+
+### What it does
+---
+Pingr inserts a box that will ping your website and display the network speed at the current moment. 
+
+
+
+
+### Usage
+---
 
 1. Create a div with an id of "pingr" and put it where you want the Pingr box to appear:
   ```html
@@ -12,7 +21,7 @@ To use Pingr:
   ```html
   <script src="www.mattheakis.com/pingr/pingr.js"></script>
   ```
-  
+
 3. Call this function with desired width/height of the Pingr box
   ```javascript
   Pingr.init(width, height)

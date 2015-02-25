@@ -4,6 +4,10 @@ NUM_BARS = 4
 elem = document.getElementById("pingr")
 num_requests = 0
 currNumBars = 4
+disconnectFnctn = undefined
+reconnectFnctn = undefined
+disconnected = false
+
 
 clearChildren = () ->
   while (elem.firstChild)
@@ -65,8 +69,14 @@ updatePing = (pingTime) ->
 
   if pingTime == -1
     # internet is down
+    disconnectFnctn() if disconnectFnctn?
+    disconnected = true
     changeNumBars 0
   else
+    if disconnected
+      reconnectFnctn() if reconnectFnctn?
+      disconnected = false
+
     if pingTime > 0 && pingTime <= 150
       changeNumBars 4
     else if pingTime > 150 && pingTime <= 300
@@ -99,16 +109,30 @@ pingServer = (callback) ->
 Pingr = {}
 
 Pingr.init = (width, height) ->
+  rootDomain = window.location.origin
+  bars = []
+  NUM_BARS = 4
+  elem = document.getElementById("pingr")
+  num_requests = 0
+  currNumBars = 4
+
+
   initElement(width, height)
   pingCallback = (pingTime) ->
     num_requests--
     updatePing pingTime
     if pingTime == -1
       # internet is down, lets check every 1000 ms
-      setTimeout pingServer(pingCallback), 1000
+      setTimeout pingServer, 1000, pingCallback
     else
-      setTimeout pingServer(pingCallback), 500
+      setTimeout pingServer, 100, pingCallback
   pingServer pingCallback
+
+Ping.disconnectListener = (callback) ->
+  disconnectFnctn = callback
+
+Ping.reconnectListener = (callback) ->
+  reconnectFnctn = callback
 
 
 window.Pingr = Pingr
