@@ -12,6 +12,7 @@ To use Pingr:
   ```html
   <script src="www.mattheakis.com/pingr/pingr.js"></script>
   ```
+  
 3. Call this function with desired width/height of the Pingr box
   ```javascript
   Pingr.init(width, height)
