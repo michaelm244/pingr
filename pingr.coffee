@@ -2,40 +2,52 @@ rootDomain = window.location.origin
 bars = []
 NUM_BARS = 4
 elem = document.getElementById("pingr")
+num_requests = 0
+currNumBars = 4
 
 hideBars = () ->
-  for i in [1, NUM_BARS] by 1
+  for i in [1..NUM_BARS] by 1
     bars[i-1].style.display = "none"
 
 changeNumBars = (numBars) ->
-  hideBars()
-
-  return if numBars <= 0 || numBars > NUM_BARS
+  return if numBars < 0 || numBars > NUM_BARS
 
   console.log "changing numBars to: "+numBars
 
-  for i in [1, numBars] by 1
-    bars[i-1].style.display = "inline-block"
+  if numBars > currNumBars
+    # show more bars
+    for i in [currNumBars+1..numBars] by 1
+      bars[i-1].style.display = "inline-block"
+  else if numBars < currNumBars
+    # hide more bars
+    for i in [numBars+1..currNumBars] by 1
+      bars[i-1].style.display = "none"
+  else
+    # numBars == currNumBars
+    return
 
-initElement = ->
-  textNode = document.createTextNode "Network Strength:"
-  pTag = document.createElement "p"
-  pTag.appendChild textNode
+  currNumBars = numBars
 
-  elem.appendChild pTag
+initElement = (width, height) ->
+  elem.style['border-radius'] = "5px"
+  elem.style.border = "1px solid #9E9E9E"
+  elem.style.width = width+"px"
+  elem.style.height = height+"px"
 
-  max_height = NUM_BARS*20
+  margin = 2
+  barWidth = (width - ((NUM_BARS+2)*(margin)) / 4
+  barHeightIncrement = (height - ((NUM_BARS+2)*margin)) / 4
 
   for i in [1..NUM_BARS] by 1
     tempDiv = document.createElement("div")
-    tempDiv.style['background-color'] = "green"
-    tempDiv.style.width = "20px"
-    tempDiv.style.height = (i*20)+"px"
+    tempDiv.style['background-color'] = "#4CAF50"
+    tempDiv.style.width = barWidth+"px"
+    tempDiv.style.height = (i*barHeightIncrement)+"px"
     tempDiv.style.display = "inline-block"
-    tempDiv.style.margin = "5px"
-    tempDiv.style['border-radius'] = "4px"
-    tempDiv.style['margin-top'] = (max_height-(i*20))+"px"
+    tempDiv.style.margin = margin+"px"
+    tempDiv.style['margin-top'] = (height-(i*barHeightIncrement))+"px"
     bars[i-1] = elem.appendChild tempDiv
+
 
 updatePing = (pingTime) ->
 
@@ -72,10 +84,14 @@ pingServer = (callback) ->
 
   started = Date.now()
   http.send null
+  num_requests++
 
-init = ->
-  initElement()
+Pingr = {}
+
+Pingr.init = (width, height) ->
+  initElement(width, height)
   pingCallback = (pingTime) ->
+    num_requests--
     updatePing pingTime
     if pingTime == -1
       # internet is down, lets check every 1000 ms
@@ -85,5 +101,5 @@ init = ->
   pingServer pingCallback
 
 
-setTimeout init, 0
+window.Pingr = Pingr
 
