@@ -4,7 +4,7 @@
 
 ### What it does
 ---
-Pingr inserts a box that will ping your website and display the network speed at the current moment. 
+An easy way to display network strength. Pingr inserts a box (the size of your choosing) into the page this displays tne user's current network speed. You can also use it to see when a user's internet connection disconnect/reconnects.
 
 
 
@@ -26,3 +26,16 @@ Pingr inserts a box that will ping your website and display the network speed at
   ```javascript
   Pingr.init(width, height)
   ```
+
+### Extra Features
+---
+
+```javascript
+Pingr.disconnectListener(function() {
+  console.log("this is executed when the user's internet disconnects!");
+});
+
+Pingr.reconnectListener(function() {
+  console.log("this is executed when the user's internet reconnects!");
+});
+```

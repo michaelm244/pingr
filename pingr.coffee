@@ -128,10 +128,10 @@ Pingr.init = (width, height) ->
       setTimeout pingServer, 100, pingCallback
   pingServer pingCallback
 
-Ping.disconnectListener = (callback) ->
+Pingr.disconnectListener = (callback) ->
   disconnectFnctn = callback
 
-Ping.reconnectListener = (callback) ->
+Pingr.reconnectListener = (callback) ->
   reconnectFnctn = callback
 
 
