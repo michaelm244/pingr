@@ -157,11 +157,11 @@
     return pingServer(pingCallback);
   };
 
-  Ping.disconnectListener = function(callback) {
+  Pingr.disconnectListener = function(callback) {
     return disconnectFnctn = callback;
   };
 
-  Ping.reconnectListener = function(callback) {
+  Pingr.reconnectListener = function(callback) {
     return reconnectFnctn = callback;
   };
 

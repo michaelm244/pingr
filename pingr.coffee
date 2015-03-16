@@ -13,10 +13,6 @@ clearChildren = () ->
   while (elem.firstChild)
     elem.removeChild(elem.firstChild)
 
-hideBars = () ->
-  for i in [1..NUM_BARS] by 1
-    bars[i-1].style.display = "none"
-
 changeNumBars = (numBars) ->
   return if numBars < 0 || numBars > NUM_BARS
 
