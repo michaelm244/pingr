@@ -4,7 +4,7 @@
 
 ### What it does
 ---
-An easy way to display network strength. Pingr inserts a box (the size of your choosing) into the page this displays tne user's current network speed. You can also use it to see when a user's internet connection disconnect/reconnects.
+An easy way to display network strength. Pingr inserts a box (the size of your choosing) into the page this displays the user's current network speed. You can also use it to see when a user's internet connection disconnect/reconnects.
 
 
 
